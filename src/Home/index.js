@@ -1,4 +1,4 @@
-import React, { useState, useEffect , useRef} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   TouchableOpacity,
   View,
@@ -18,14 +18,18 @@ import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 
+import { useNavigation } from "@react-navigation/native";
+
+
 import * as Clipboard from "expo-clipboard";
 import * as Animatable from "react-native-animatable";
 
 export default function Home({ route }) {
+  const navigation = useNavigation();
   const selectedContract = route.params.selectedContract;
   const [contractStatus, setContractStatus] = useState("");
   const [contractDueStatus, setDueStatus] = useState("");
-  const [boletos, setBoletos] = useState([]); // Alteração: Armazenar todos os boletos em um array
+  const [boletos, setBoletos] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isModalVisible2, setModalVisible2] = useState(false);
   const [pixCopied, setPixCopied] = useState(false);
@@ -35,30 +39,37 @@ export default function Home({ route }) {
   const [selectedBoleto, setSelectedBoleto] = useState(null);
   const selectedBoletoRef = useRef(null);
 
-
   useEffect(() => {
-    if (selectedContract) {
-      const status = selectedContract.booklet[0].payment || "Em dia";
-      const dueDate = selectedContract.booklet[0].dueDate || " ";
-      setContractStatus(status);
+    const fetchData = async () => {
+      if (selectedContract) {
+        const status = selectedContract.booklet[0].payment || "Em dia";
+        const dueDate = selectedContract.booklet[0].dueDate || " ";
+        setContractStatus(status);
+    
+        const formattedDueDate = formatDueDate(dueDate);
+    
+        setDueStatus(formattedDueDate);
+    
+        const boletosData = selectedContract.booklet.map((boleto) => ({
+          link: boleto.billetCurrent || "",
+          id: boleto.id || "",
+          pix: boleto.pix_copy_paste || "",
+          barcode: boleto.barcode || "",
+          status: boleto.payment || "Em dia",
+          dueDate: formatDueDate(boleto.dueDate) || "",
+        }));
+    
+        setBoletos(boletosData);
+        const overdueBoletos = boletosData.filter((boleto) => boleto.status === "VENCIDO");
+        if (overdueBoletos.length > 2) {
+          navigation.navigate('Contato');
+        }
+      }
+    };
 
-      const formattedDueDate = formatDueDate(dueDate);
-
-      setDueStatus(formattedDueDate);
-
-      const boletosData = selectedContract.booklet.map((boleto) => ({
-
-        link: boleto.billetCurrent || "",
-        id: boleto.id || "",
-        pix: boleto.pix_copy_paste || "",
-        barcode: boleto.barcode || "",
-        status: boleto.payment || "Em dia", 
-        dueDate: formatDueDate(boleto.dueDate) || "", 
-      }));
-
-      setBoletos(boletosData);
-    }
-  }, [selectedContract]);
+    fetchData();
+  }, [selectedContract, navigation]); 
+  
 
   const formatDueDate = (date) => {
     const parts = date.split("-");
@@ -70,85 +81,86 @@ export default function Home({ route }) {
     return date;
   };
 
-const handlePrintPress = (boleto) => {
-  if (boleto.link) {
-    Linking.openURL(boleto.link)
-      .then(() => {})
-      .catch((err) => {});
-  }
-};
-
-const handlePixPaymentPress = (boleto) => {
-  if (boleto.pix) {
-    setModalVisible(true);
-    selectedBoletoRef.current = boleto;
-  }
-};
-
-const handleBarCodePress = async (boleto) => {
-  if (boleto.barcode) {
-
-    setModalVisible2(true);
-    selectedBoletoRef.current = boleto;
-  }
-};
-
-
-const handleCopyToClipboard = async () => {
-  try {
-    const selectedBoleto = selectedBoletoRef.current;
-    if (selectedBoleto) {
-      const encodedPix = encodeURIComponent(selectedBoleto.pix);
-
-      await Clipboard.setString(encodedPix);
-    } else {
-      console.error("Nenhum boleto foi selecionado");
+  const handlePrintPress = (boleto) => {
+    if (boleto.link) {
+      Linking.openURL(boleto.link)
+        .then(() => {})
+        .catch((err) => {});
     }
-  } catch (error) {
-    console.error("Erro ao copiar:", error);
-  }
-};
+  };
 
-
-
-const handleCopyToClipboardBarCode = async () => {
-  try {
-  
-    const selectedBoleto = selectedBoletoRef.current;
-    if (selectedBoleto) {
-      await Clipboard.setString(selectedBoleto.barcode);
-    } else {
-      console.error("Nenhum boleto foi selecionado");
+  const handlePixPaymentPress = (boleto) => {
+    if (boleto.pix) {
+      setModalVisible(true);
+      selectedBoletoRef.current = boleto;
     }
-  } catch (error) {
-    console.error("Erro ao copiar", error);
-  }
-};
+  };
 
-
-const handleLiberarPress = async () => {
-  try { 
-    const selectedBoleto = boletos.find((boleto) => boleto.id === someId); 
-    if (selectedBoleto) {
-      console.log("ID e Status do boleto selecionado:", selectedBoleto.id, selectedBoleto.status);
-      const cliente = { id: selectedBoleto.id, status: selectedBoleto.status };
-      const boletoData = { code: selectedBoleto.code, temporary_released: false };
-      liberaTemporariamenteAPI(cliente, boletoData)
-        .then(() => {
-          setModalSuccessVisible(true);
-        })
-        .catch(() => {
-          setModalErrorVisible(true);
-        });
-    } else {
-      console.error("Nenhum Boleto Selecionado para Desbloqueio");
+  const handleBarCodePress = async (boleto) => {
+    if (boleto.barcode) {
+      setModalVisible2(true);
+      selectedBoletoRef.current = boleto;
     }
-  } catch (error) {
-    setModalErrorVisible(true);
-  }
-};
+  };
 
+  const handleCopyToClipboard = async () => {
+    try {
+      const selectedBoleto = selectedBoletoRef.current;
+      if (selectedBoleto) {
+        const encodedPix = encodeURIComponent(selectedBoleto.pix);
+        await Clipboard.setString(encodedPix);
+      } else {
+        console.error("Nenhum boleto foi selecionado");
+      }
+    } catch (error) {
+      console.error("Erro ao copiar:", error);
+    }
+  };
 
+  const handleCopyToClipboardBarCode = async () => {
+    try {
+      const selectedBoleto = selectedBoletoRef.current;
+      if (selectedBoleto) {
+        await Clipboard.setString(selectedBoleto.barcode);
+      } else {
+        console.error("Nenhum boleto foi selecionado");
+      }
+    } catch (error) {
+      console.error("Erro ao copiar", error);
+    }
+  };
+
+  const handleLiberarPress = async () => {
+    try {
+      const selectedBoleto = boletos.find((boleto) => boleto.id === someId);
+      if (selectedBoleto) {
+        console.log(
+          "ID e Status do boleto selecionado:",
+          selectedBoleto.id,
+          selectedBoleto.status
+        );
+        const cliente = {
+          id: selectedBoleto.id,
+          status: selectedBoleto.status,
+        };
+        const boletoData = {
+          code: selectedBoleto.code,
+          temporary_released: false,
+        };
+        liberaTemporariamenteAPI(cliente, boletoData)
+          .then(() => {
+            setModalSuccessVisible(true);
+          })
+          .catch(() => {
+            setModalErrorVisible(true);
+          });
+      } else {
+        console.error("Nenhum Boleto Selecionado para Desbloqueio");
+      }
+    } catch (error) {
+      setModalErrorVisible(true);
+    }
+  };
 
   return (
     <View style={styles.tabContainer}>
@@ -246,8 +258,6 @@ const handleLiberarPress = async () => {
                       Desbloqueio Temporário
                     </Text>
                   </TouchableOpacity>
-
-
                 </View>
               </Animatable.View>
             </Animatable.View>

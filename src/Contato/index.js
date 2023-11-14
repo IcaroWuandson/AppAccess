@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 
-import ImageBoleto from "../Images/ImageBoleto.png";
+import ImageContato from "../Images/ImageContato.png";
 import logo from "../Images/logo.png";
 
 export default function SemBoleto() {
@@ -11,8 +11,8 @@ export default function SemBoleto() {
         <Image source={logo} style={styles.image} />
       </View>
 
-      <Image source={ImageBoleto} style={styles.imagePrincipal} />
-      <Text style={styles.text}>Você não tem boleto vencido!</Text>
+      <Image source={ImageContato} style={styles.imagePrincipal} />
+      <Text style={styles.text}>Entre em contato para negociar</Text>
     </View>
   );
 }

@@ -10,7 +10,7 @@ const api = axios.create({
 
 // Configuração da segunda API
 const apiTemporaryRelease = axios.create({
-  baseURL: "https://mkaccess.com.br:8088/api/v1/application/temporaryRelease",
+  baseURL: "https://mkaccess.com.br:8088/api/v1/application",
   headers: {
     "Content-Type": "application/json",
     token: "fd7c91d13c57be8d7d8f5f2a2e4cfb28",
@@ -67,7 +67,7 @@ export const consultaAPI = async (cpfCnpj) => {
 
 export const liberaTemporariamenteAPI = async (cliente, boleto) => {
   try {
-    const segundaResposta = await apiTemporaryRelease.post("/liberation", {
+    const segundaResposta = await apiTemporaryRelease.post("/temporaryRelease", {
       idClient: cliente.id,
       code: boleto.code,
     });
