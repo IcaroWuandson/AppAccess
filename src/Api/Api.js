@@ -26,7 +26,7 @@ export const consultaAPI = async (cpfCnpj) => {
       const contracts = response.data.contracts;
 
       if (contracts && contracts.length > 0) {
-        const contract = contracts[0]; 
+        const contract = contracts[0];
 
         const userData = {
           nome: contract.nome,
@@ -62,22 +62,31 @@ export const consultaAPI = async (cpfCnpj) => {
   } catch (error) {
     throw error;
   }
-};
+}
 
 
-export const liberaTemporariamenteAPI = async (cliente, boleto) => {
+export const liberaTemporariamenteAPI = async (boleto) => {
+
   try {
+
     const segundaResposta = await apiTemporaryRelease.post("/temporaryRelease", {
-      idClient: cliente.id,
+
+      idClient: boleto.idClient,
       code: boleto.code,
-    });
+
+    })
 
     console.log("Segunda API - Liberação Temporária:", segundaResposta.data);
+
+    return segundaResposta.data
+
+  
   } catch (error) {
+
     console.error('Erro ao liberar temporariamente a API:', error.response ? error.response.data : error.message);
+
   }
-};
 
-
+}
 
 export default api;

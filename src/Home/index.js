@@ -43,27 +43,30 @@ export default function Home({ route }) {
         const status = selectedContract.booklet[0].payment || "Em dia";
         const dueDate = selectedContract.booklet[0].dueDate || " ";
         setContractStatus(status);
-    
+
         const formattedDueDate = formatDueDate(dueDate);
-    
+
         setDueStatus(formattedDueDate);
-    
+
         const boletosData = selectedContract.booklet.map((boleto) => ({
-          link: boleto.billetCurrent || "",
           id: boleto.id || "",
+          idClient: boleto.idClient || "",
+          temporary_released: boleto.temporary_released || "",
+          code: boleto.code || "",
+          link: boleto.billetCurrent || "",
           pix: boleto.pix_copy_paste || "",
           barcode: boleto.barcode || "",
           status: boleto.payment || "Em dia",
           dueDate: formatDueDate(boleto.dueDate) || "",
         }));
-    
+
         setBoletos(boletosData);
       }
     };
 
     fetchData();
-  }, [selectedContract]); 
-  
+  }, [selectedContract]);
+
 
   const formatDueDate = (date) => {
     const parts = date.split("-");
@@ -78,8 +81,8 @@ export default function Home({ route }) {
   const handlePrintPress = (boleto) => {
     if (boleto.link) {
       Linking.openURL(boleto.link)
-        .then(() => {})
-        .catch((err) => {});
+        .then(() => { })
+        .catch((err) => { });
     }
   };
 
@@ -124,37 +127,44 @@ export default function Home({ route }) {
     }
   };
 
-  const handleLiberarPress = async () => {
+  const handleLiberarPress = async (boleto) => {
+
     try {
-      const selectedBoleto = boletos.find((boleto) => boleto.id === someId);
-      if (selectedBoleto) {
-        console.log(
-          "ID e Status do boleto selecionado:",
-          selectedBoleto.id,
-          selectedBoleto.status
-        );
-        const cliente = {
-          id: selectedBoleto.id,
-          status: selectedBoleto.status,
-        };
+
+      if (boleto) {
+
+        console.log("ID e Status do boleto selecionado:", boleto.code, boleto.status)
+
         const boletoData = {
-          code: selectedBoleto.code,
-          temporary_released: false,
-        };
-        liberaTemporariamenteAPI(cliente, boletoData)
-          .then(() => {
-            setModalSuccessVisible(true);
+          idClient: boleto.idClient,
+          code: boleto.code
+        }
+
+        liberaTemporariamenteAPI(boletoData)
+          .then((response) => {
+
+            if (response.status === 'success') {
+
+              setModalSuccessVisible(true)
+
+            } else {
+
+              setModalErrorVisible(true)
+            }
+
           })
           .catch(() => {
-            setModalErrorVisible(true);
-          });
-      } else {
-        console.error("Nenhum Boleto Selecionado para Desbloqueio");
-      }
+            setModalErrorVisible(true)
+          })
+
+      } else { console.error("Nenhum Boleto Selecionado para Desbloqueio") }
+
     } catch (error) {
-      setModalErrorVisible(true);
+      console.log(error)
+      setModalErrorVisible(true)
     }
-  };
+
+  }
 
   return (
     <View style={styles.tabContainer}>
@@ -230,7 +240,7 @@ export default function Home({ route }) {
                 <TouchableOpacity
                   style={styles.pixButton}
                   onPress={() => {
-                    handlePixPaymentPress(boleto);
+                    handlePixPaymentPress(boleto)
                   }}
                 >
                   <FontAwesome
@@ -242,10 +252,15 @@ export default function Home({ route }) {
                   <Text style={styles.buttonText}>Pagar boleto via Pix</Text>
                 </TouchableOpacity>
 
-                <View style={styles.liberarContainer}>
+                <View style={
+                  !boleto.temporary_released &&
+                    (selectedContract.status == "REDUZIDO" || selectedContract.status == "BLOQUEADO") ?
+                    styles.liberarContainer : styles.hiddenContainer}
+                >
+
                   <TouchableOpacity
                     style={styles.liberarButtom}
-                    onPress={() => handleLiberarPress()}
+                    onPress={() => handleLiberarPress(boleto)}
                   >
                     <Feather name="unlock" size={24} color="white" />
                     <Text style={styles.buttonText}>
@@ -456,6 +471,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+
+  hiddenContainer: {
+    display: "none"
+  },
+
   cardText: {
     width: "100%",
     marginBottom: 5,
