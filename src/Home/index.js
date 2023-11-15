@@ -12,8 +12,7 @@ import {
 } from "react-native";
 import logo from "../Images/logo.png";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { consultaAPI, liberaTemporariamenteAPI } from "../Api/Api";
-import { MaterialIcons } from "@expo/vector-icons";
+import { liberaTemporariamenteAPI } from "../Api/Api";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
@@ -36,7 +35,6 @@ export default function Home({ route }) {
   const [pixBarCodeCopied, setBarcodeCopied] = useState(false);
   const [modalErrorVisible, setModalErrorVisible] = useState(false);
   const [modalSuccessVisible, setModalSuccessVisible] = useState(false);
-  const [selectedBoleto, setSelectedBoleto] = useState(null);
   const selectedBoletoRef = useRef(null);
 
   useEffect(() => {
@@ -60,15 +58,11 @@ export default function Home({ route }) {
         }));
     
         setBoletos(boletosData);
-        const overdueBoletos = boletosData.filter((boleto) => boleto.status === "VENCIDO");
-        if (overdueBoletos.length > 2) {
-          navigation.navigate('Contato');
-        }
       }
     };
 
     fetchData();
-  }, [selectedContract, navigation]); 
+  }, [selectedContract]); 
   
 
   const formatDueDate = (date) => {

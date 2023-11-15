@@ -18,12 +18,15 @@ export default function SelecionarContrato({ route, navigation }) {
   const handleSelectContract = async (contract) => {
     try {
       if (contract && contract.id) {
-        // Verifica se a propriedade 'payment' está presente e não é nula em algum objeto dentro de 'booklet'
         const hasValidPayment = contract.booklet.some(
           (item) => "payment" in item && item.payment !== null
         );
-
-        if (hasValidPayment) {
+        const overdueBoletos = contract.booklet.filter(
+          (boleto) => boleto.payment === "VENCIDO"
+        );
+        if (overdueBoletos.length > 2) {
+          navigation.navigate('Contato');
+        } else if (hasValidPayment) {
           await AsyncStorage.setItem("contractId", contract.id.toString());
           navigation.navigate("Home", {
             userData: userData,
@@ -35,11 +38,11 @@ export default function SelecionarContrato({ route, navigation }) {
       } else {
         navigation.navigate("SemBoleto");
       }
-    }
-     catch (error) {
+    } catch (error) {
       navigation.navigate("SemBoleto");
     }
   };
+  
 
   return (
     <View style={styles.container}>
@@ -68,19 +71,13 @@ export default function SelecionarContrato({ route, navigation }) {
             style={styles.contractItem}
           >
             <Text style={styles.contractName}>Contrato {index + 1}</Text>
-            <Text style={styles.contractInfo2}>
-              Situação: {contract.status}
-            </Text>
-
+            <Text style={styles.contractInfo2}>Situação: {contract.status}</Text>
             <Text style={styles.contractInfo}>Nome: {contract.nome}</Text>
             <Text style={styles.contractInfo}>Plano: {contract.plano}</Text>
-            <Text style={styles.contractInfo}>
-              Endereço: {contract.endereco}
-            </Text>
+            <Text style={styles.contractInfo}>Endereço: {contract.endereco}</Text>
             <Text style={styles.contractInfo}>Bairro: {contract.bairro}</Text>
             <Text style={styles.contractInfo}>Cidade: {contract.cidade}</Text>
             <Text style={styles.contractInfo}>Estado: {contract.estado}</Text>
-
             <TouchableOpacity
               style={styles.button}
               onPress={() => handleSelectContract(contract)}
