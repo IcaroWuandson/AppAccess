@@ -9,6 +9,7 @@ import {
   Linking,
   Button,
   Modal,
+  RefreshControl,
 } from "react-native";
 import logo from "../Images/logo.png";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -24,7 +25,10 @@ import * as Animatable from "react-native-animatable";
 
 export default function Home({ route }) {
   const navigation = useNavigation();
-  const selectedContract = route.params.selectedContract;
+
+  const [selectedContract, setSelectedContract] = useState(route.params.selectedContract);
+  const [refreshing, setRefreshing] = useState(false);
+
   const [contractStatus, setContractStatus] = useState("");
   const [contractDueStatus, setDueStatus] = useState("");
   const [boletos, setBoletos] = useState([]);
@@ -38,15 +42,45 @@ export default function Home({ route }) {
 
   useEffect(() => {
     const fetchData = async () => {
+      try {
+        const updatedSelectedContract = await fetchupdatedSelectedContract();
+        setSelectedContract(updatedSelectedContract);
+        console.log("dados do boleto (atualizando):", updatedSelectedContract);
+      } catch (error) {
+        console.error("Error fetching updated data: ", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleRefresh = async () => {
+    try {
+      setRefreshing(true);
+      const updatedSelectedContract = await fetchupdatedSelectedContract();
+      setUserData(updatedSelectedContract);
+
+      console.log("dados do boleto (atualizado durante o refresh):", updatedSelectedContract);
+
+      setRefreshing(false);
+    } catch (error) {
+      console.error("Error updating data: ", error);
+      setRefreshing(false);
+    }
+  };
+ 
+  const fetchupdatedSelectedContract = async () => {
+    return route.params.selectedContract;
+  };
+
+
+  useEffect(() => {
+    const fetchData = async () => {
       if (selectedContract) {
         const status = selectedContract.booklet[0].payment || "Em dia";
         const dueDate = selectedContract.booklet[0].dueDate || " ";
         setContractStatus(status);
-
         const formattedDueDate = formatDueDate(dueDate);
-
         setDueStatus(formattedDueDate);
-
         const boletosData = selectedContract.booklet.map((boleto) => ({
           id: boleto.id || "",
           idClient: boleto.idClient || "",
@@ -133,16 +167,18 @@ export default function Home({ route }) {
           boleto.code,
           boleto.status
         );
-
+  
         const boletoData = {
           idClient: boleto.idClient,
           code: boleto.code,
         };
-
+  
         liberaTemporariamenteAPI(boletoData)
           .then((response) => {
             if (response.status === "success") {
               setModalSuccessVisible(true);
+              // Aqui eu to chamando o handleRefresh após o sucesso de handleLiberarPress
+              handleRefresh();
             } else {
               setModalErrorVisible(true);
             }
@@ -158,7 +194,7 @@ export default function Home({ route }) {
       setModalErrorVisible(true);
     }
   };
-
+  
   return (
     <View style={styles.tabContainer}>
       <Animatable.View

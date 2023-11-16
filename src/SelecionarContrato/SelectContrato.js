@@ -22,10 +22,7 @@ export default function SelecionarContrato({ route, navigation }) {
       try {
         const updatedUserData = await fetchUpdatedUserData();
         setUserData(updatedUserData);
-        console.log("dados do cliente (atualizando):", updatedUserData);
-      } catch (error) {
-        console.error("Error fetching updated data: ", error);
-      }
+      } catch (error) {}
     };
     fetchData();
   }, []);
@@ -35,16 +32,12 @@ export default function SelecionarContrato({ route, navigation }) {
       setRefreshing(true);
       const updatedUserData = await fetchUpdatedUserData();
       setUserData(updatedUserData);
-
-      console.log("dados do cliente (atualizado durante o refresh):", updatedUserData);
-
       setRefreshing(false);
     } catch (error) {
-      console.error("Error updating data: ", error);
       setRefreshing(false);
     }
   };
- 
+
   const fetchUpdatedUserData = async () => {
     return route.params.userData;
   };
