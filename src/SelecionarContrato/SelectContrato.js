@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  RefreshControl,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import logo from "../Images/logo.png";
@@ -13,7 +14,40 @@ import logo from "../Images/logo.png";
 import * as Animatable from "react-native-animatable";
 
 export default function SelecionarContrato({ route, navigation }) {
-  const userData = route.params.userData;
+  const [userData, setUserData] = useState(route.params.userData);
+  const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const updatedUserData = await fetchUpdatedUserData();
+        setUserData(updatedUserData);
+        console.log("dados do cliente (atualizando):", updatedUserData);
+      } catch (error) {
+        console.error("Error fetching updated data: ", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleRefresh = async () => {
+    try {
+      setRefreshing(true);
+      const updatedUserData = await fetchUpdatedUserData();
+      setUserData(updatedUserData);
+
+      console.log("dados do cliente (atualizado durante o refresh):", updatedUserData);
+
+      setRefreshing(false);
+    } catch (error) {
+      console.error("Error updating data: ", error);
+      setRefreshing(false);
+    }
+  };
+ 
+  const fetchUpdatedUserData = async () => {
+    return route.params.userData;
+  };
 
   const handleSelectContract = async (contract) => {
     try {
@@ -25,7 +59,7 @@ export default function SelecionarContrato({ route, navigation }) {
           (boleto) => boleto.payment === "VENCIDO"
         );
         if (overdueBoletos.length > 2) {
-          navigation.navigate('Contato');
+          navigation.navigate("Contato");
         } else if (hasValidPayment) {
           await AsyncStorage.setItem("contractId", contract.id.toString());
           navigation.navigate("Home", {
@@ -42,7 +76,6 @@ export default function SelecionarContrato({ route, navigation }) {
       navigation.navigate("SemBoleto");
     }
   };
-  
 
   return (
     <View style={styles.container}>
@@ -62,6 +95,9 @@ export default function SelecionarContrato({ route, navigation }) {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         style={styles.contractList}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+        }
       >
         {userData.contracts.map((contract, index) => (
           <Animatable.View
@@ -71,10 +107,14 @@ export default function SelecionarContrato({ route, navigation }) {
             style={styles.contractItem}
           >
             <Text style={styles.contractName}>Contrato {index + 1}</Text>
-            <Text style={styles.contractInfo2}>Situação: {contract.status}</Text>
+            <Text style={styles.contractInfo2}>
+              Situação: {contract.status}
+            </Text>
             <Text style={styles.contractInfo}>Nome: {contract.nome}</Text>
             <Text style={styles.contractInfo}>Plano: {contract.plano}</Text>
-            <Text style={styles.contractInfo}>Endereço: {contract.endereco}</Text>
+            <Text style={styles.contractInfo}>
+              Endereço: {contract.endereco}
+            </Text>
             <Text style={styles.contractInfo}>Bairro: {contract.bairro}</Text>
             <Text style={styles.contractInfo}>Cidade: {contract.cidade}</Text>
             <Text style={styles.contractInfo}>Estado: {contract.estado}</Text>

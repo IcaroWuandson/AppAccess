@@ -19,7 +19,6 @@ import { Feather } from "@expo/vector-icons";
 
 import { useNavigation } from "@react-navigation/native";
 
-
 import * as Clipboard from "expo-clipboard";
 import * as Animatable from "react-native-animatable";
 
@@ -67,7 +66,6 @@ export default function Home({ route }) {
     fetchData();
   }, [selectedContract]);
 
-
   const formatDueDate = (date) => {
     const parts = date.split("-");
     if (parts.length === 3) {
@@ -81,8 +79,8 @@ export default function Home({ route }) {
   const handlePrintPress = (boleto) => {
     if (boleto.link) {
       Linking.openURL(boleto.link)
-        .then(() => { })
-        .catch((err) => { });
+        .then(() => {})
+        .catch((err) => {});
     }
   };
 
@@ -128,43 +126,38 @@ export default function Home({ route }) {
   };
 
   const handleLiberarPress = async (boleto) => {
-
     try {
-
       if (boleto) {
-
-        console.log("ID e Status do boleto selecionado:", boleto.code, boleto.status)
+        console.log(
+          "ID e Status do boleto selecionado:",
+          boleto.code,
+          boleto.status
+        );
 
         const boletoData = {
           idClient: boleto.idClient,
-          code: boleto.code
-        }
+          code: boleto.code,
+        };
 
         liberaTemporariamenteAPI(boletoData)
           .then((response) => {
-
-            if (response.status === 'success') {
-
-              setModalSuccessVisible(true)
-
+            if (response.status === "success") {
+              setModalSuccessVisible(true);
             } else {
-
-              setModalErrorVisible(true)
+              setModalErrorVisible(true);
             }
-
           })
           .catch(() => {
-            setModalErrorVisible(true)
-          })
-
-      } else { console.error("Nenhum Boleto Selecionado para Desbloqueio") }
-
+            setModalErrorVisible(true);
+          });
+      } else {
+        console.error("Nenhum Boleto Selecionado para Desbloqueio");
+      }
     } catch (error) {
-      console.log(error)
-      setModalErrorVisible(true)
+      console.log(error);
+      setModalErrorVisible(true);
     }
-
-  }
+  };
 
   return (
     <View style={styles.tabContainer}>
@@ -240,7 +233,7 @@ export default function Home({ route }) {
                 <TouchableOpacity
                   style={styles.pixButton}
                   onPress={() => {
-                    handlePixPaymentPress(boleto)
+                    handlePixPaymentPress(boleto);
                   }}
                 >
                   <FontAwesome
@@ -252,12 +245,15 @@ export default function Home({ route }) {
                   <Text style={styles.buttonText}>Pagar boleto via Pix</Text>
                 </TouchableOpacity>
 
-                <View style={
-                  !boleto.temporary_released &&
-                    (selectedContract.status == "REDUZIDO" || selectedContract.status == "BLOQUEADO") ?
-                    styles.liberarContainer : styles.hiddenContainer}
+                <View
+                  style={
+                    !boleto.temporary_released &&
+                    (selectedContract.status == "REDUZIDO" ||
+                      selectedContract.status == "BLOQUEADO")
+                      ? styles.liberarContainer
+                      : styles.hiddenContainer
+                  }
                 >
-
                   <TouchableOpacity
                     style={styles.liberarButtom}
                     onPress={() => handleLiberarPress(boleto)}
@@ -473,7 +469,7 @@ const styles = StyleSheet.create({
   },
 
   hiddenContainer: {
-    display: "none"
+    display: "none",
   },
 
   cardText: {
