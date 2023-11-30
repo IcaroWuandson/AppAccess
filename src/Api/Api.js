@@ -1,22 +1,21 @@
 import axios from "axios";
 
-const api = axios.create({
-  baseURL: "https://mkaccess.com.br:8088/api/v1/application",
-  headers: {
-    "Content-Type": "application/json",
-    token: "fd7c91d13c57be8d7d8f5f2a2e4cfb28",
-  },
-});
+const baseURL = "https://mkaccess.com.br:8088/api/v1/application";
 
-// Configuração da segunda API
-const apiTemporaryRelease = axios.create({
-  baseURL: "https://mkaccess.com.br:8088/api/v1/application",
-  headers: {
-    "Content-Type": "application/json",
-    token: "fd7c91d13c57be8d7d8f5f2a2e4cfb28",
-  },
-});
+const headers = {
+  "Content-Type": "application/json",
+  token: "fd7c91d13c57be8d7d8f5f2a2e4cfb28",
+};
 
+const createAPIInstance = () => {
+  return axios.create({
+    baseURL: baseURL,
+    headers: headers,
+  });
+};
+
+const api = createAPIInstance();
+const apiTemporaryRelease = createAPIInstance();
 
 export const consultaAPI = async (cpfCnpj) => {
   try {
@@ -52,41 +51,39 @@ export const consultaAPI = async (cpfCnpj) => {
           records: records,
         };
       } else {
-        console.error("Nenhum contrato encontrado na resposta da API.");
         throw new Error("Nenhum contrato encontrado na resposta da API.");
       }
     } else {
-      console.error("A resposta da API não indica sucesso:", response.data);
       throw new Error("Falha na autenticação ou dados da API inválidos");
     }
   } catch (error) {
     throw error;
   }
-}
+};
 
-
-export const liberaTemporariamenteAPI = async (boleto) => {
-
+export const liberaTemporariamenteAPI = async (boleto, refreshCallback) => {
   try {
-
     const segundaResposta = await apiTemporaryRelease.post("/temporaryRelease", {
-
       idClient: boleto.idClient,
       code: boleto.code,
-
-    })
+    });
 
     console.log("Segunda API - Liberação Temporária:", segundaResposta.data);
 
-    return segundaResposta.data
+    console.log("Antes de executar refreshCallback");
+    if (refreshCallback && typeof refreshCallback === "function") {
+      refreshCallback();
+    }
 
-  
+    console.log("Depois de executar refreshCallback");
+
+    return segundaResposta.data;
   } catch (error) {
-
-    console.error('Erro ao liberar temporariamente a API:', error.response ? error.response.data : error.message);
-
+    console.error(
+      "Erro ao liberar temporariamente a API:",
+      error.response ? error.response.data : error.message
+    );
   }
-
-}
+};
 
 export default api;

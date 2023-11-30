@@ -23,10 +23,12 @@ import { useNavigation } from "@react-navigation/native";
 import * as Clipboard from "expo-clipboard";
 import * as Animatable from "react-native-animatable";
 
+import { consultaAPI } from "../Api/Api";
+
 export default function Home({ route }) {
   const navigation = useNavigation();
 
-  const [selectedContract, setSelectedContract] = useState(route.params.selectedContract);
+  const [selectedContract, setSelectedContract ] = useState(route.params.selectedContract);
   const [refreshing, setRefreshing] = useState(false);
 
   const [contractStatus, setContractStatus] = useState("");
@@ -40,39 +42,64 @@ export default function Home({ route }) {
   const [modalSuccessVisible, setModalSuccessVisible] = useState(false);
   const selectedBoletoRef = useRef(null);
 
+  const fetchData = async () => {
+    try {
+      console.log('Iniciando fetchData...');
+      const updatedSelectedContract = await fetchUpdatedSelectedContract();
+      setSelectedContract((prevContract) => {
+        console.log('Valor atual de selectedContract:', prevContract);
+        console.log('Novo valor de selectedContract:', updatedSelectedContract);
+        return updatedSelectedContract;
+      });
+    } catch (error) {
+      console.error('Error fetching updated data: ', error);
+    }
+  };
+  
+  const fetchUpdatedSelectedContract = async () => {
+    const data = await consultaAPI(); 
+    console.log('Dados da API:', data);
+    return data;
+  };
+  
+  
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const updatedSelectedContract = await fetchupdatedSelectedContract();
-        setSelectedContract(updatedSelectedContract);
-        console.log("dados do boleto (atualizando):", updatedSelectedContract);
-      } catch (error) {
-        console.error("Error fetching updated data: ", error);
-      }
-    };
+    console.log('Chamando fetchData devido a uma alteração em selectedContract:', selectedContract);
     fetchData();
-  }, []);
+  }, [selectedContract]);
 
+  useEffect(() => {
+    const fetchDataOnInit = async () => {
+      console.log('Chamando fetchData durante a inicialização do componente.');
+      await fetchData();
+    };
+  
+    fetchDataOnInit();
+  }, []);
+  
+  
   const handleRefresh = async () => {
     try {
       setRefreshing(true);
-      const updatedSelectedContract = await fetchupdatedSelectedContract();
-      setUserData(updatedSelectedContract);
-
-      console.log("dados do boleto (atualizado durante o refresh):", updatedSelectedContract);
-
+      await fetchData();
       setRefreshing(false);
     } catch (error) {
-      console.error("Error updating data: ", error);
+      console.error('Error updating data: ', error);
       setRefreshing(false);
     }
   };
- 
-  const fetchupdatedSelectedContract = async () => {
-    return route.params.selectedContract;
+  
+  const onRefresh = async () => {
+    try {
+      setRefreshing(true);
+      await fetchData(); // Chama fetchData imediatamente
+      setRefreshing(false);
+    } catch (error) {
+      console.error('Error during onRefresh:', error);
+      setRefreshing(false);
+    }
   };
-
-
+  
   useEffect(() => {
     const fetchData = async () => {
       if (selectedContract) {
@@ -94,6 +121,7 @@ export default function Home({ route }) {
         }));
 
         setBoletos(boletosData);
+        console.log('Boletos atualizados:', boletos);
       }
     };
 
@@ -213,10 +241,17 @@ export default function Home({ route }) {
         <Animatable.View animation="fadeIn" duration={3000}>
           <Text style={styles.statusText3}>Confira os boletos abaixo:</Text>
         </Animatable.View>
+
         <ScrollView
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           style={styles.contractList}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+          }
         >
           {boletos.map((boleto, index) => (
             <Animatable.View key={index} style={styles.card}>
@@ -411,6 +446,9 @@ export default function Home({ route }) {
           </View>
         </View>
       </Modal>
+
+
+
     </View>
   );
 }
