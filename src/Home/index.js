@@ -17,6 +17,7 @@ import { liberaTemporariamenteAPI } from "../Api/Api";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context"; // Importe o SafeAreaView
 
 import { useNavigation } from "@react-navigation/native";
 
@@ -28,7 +29,9 @@ import { consultaAPI } from "../Api/Api";
 export default function Home({ route }) {
   const navigation = useNavigation();
 
-  const [selectedContract, setSelectedContract ] = useState(route.params.selectedContract);
+  const [selectedContract, setSelectedContract] = useState(
+    route.params.selectedContract
+  );
   const [refreshing, setRefreshing] = useState(false);
 
   const [contractStatus, setContractStatus] = useState("");
@@ -44,62 +47,63 @@ export default function Home({ route }) {
 
   const fetchData = async () => {
     try {
-      console.log('Iniciando fetchData...');
+      console.log("Iniciando fetchData...");
       const updatedSelectedContract = await fetchUpdatedSelectedContract();
       setSelectedContract((prevContract) => {
-        console.log('Valor atual de selectedContract:', prevContract);
-        console.log('Novo valor de selectedContract:', updatedSelectedContract);
+        console.log("Valor atual de selectedContract:", prevContract);
+        console.log("Novo valor de selectedContract:", updatedSelectedContract);
         return updatedSelectedContract;
       });
     } catch (error) {
-      console.error('Error fetching updated data: ', error);
+      console.error("Error fetching updated data: ", error);
     }
   };
-  
+
   const fetchUpdatedSelectedContract = async () => {
-    const data = await consultaAPI(); 
-    console.log('Dados da API:', data);
+    const data = await consultaAPI();
+    console.log("Dados da API:", data);
     return data;
   };
-  
-  
+
   useEffect(() => {
-    console.log('Chamando fetchData devido a uma alteração em selectedContract:', selectedContract);
+    console.log(
+      "Chamando fetchData devido a uma alteração em selectedContract:",
+      selectedContract
+    );
     fetchData();
   }, [selectedContract]);
 
   useEffect(() => {
     const fetchDataOnInit = async () => {
-      console.log('Chamando fetchData durante a inicialização do componente.');
+      console.log("Chamando fetchData durante a inicialização do componente.");
       await fetchData();
     };
-  
+
     fetchDataOnInit();
   }, []);
-  
-  
+
   const handleRefresh = async () => {
     try {
       setRefreshing(true);
       await fetchData();
       setRefreshing(false);
     } catch (error) {
-      console.error('Error updating data: ', error);
+      console.error("Error updating data: ", error);
       setRefreshing(false);
     }
   };
-  
+
   const onRefresh = async () => {
     try {
       setRefreshing(true);
       await fetchData(); // Chama fetchData imediatamente
       setRefreshing(false);
     } catch (error) {
-      console.error('Error during onRefresh:', error);
+      console.error("Error during onRefresh:", error);
       setRefreshing(false);
     }
   };
-  
+
   useEffect(() => {
     const fetchData = async () => {
       if (selectedContract) {
@@ -121,7 +125,7 @@ export default function Home({ route }) {
         }));
 
         setBoletos(boletosData);
-        console.log('Boletos atualizados:', boletos);
+        console.log("Boletos atualizados:", boletos);
       }
     };
 
@@ -195,12 +199,12 @@ export default function Home({ route }) {
           boleto.code,
           boleto.status
         );
-  
+
         const boletoData = {
           idClient: boleto.idClient,
           code: boleto.code,
         };
-  
+
         liberaTemporariamenteAPI(boletoData)
           .then((response) => {
             if (response.status === "success") {
@@ -222,9 +226,9 @@ export default function Home({ route }) {
       setModalErrorVisible(true);
     }
   };
-  
+
   return (
-    <View style={styles.tabContainer}>
+    <SafeAreaView style={styles.tabContainer}>
       <Animatable.View
         animation="fadeInDown"
         duration={2000}
@@ -247,10 +251,7 @@ export default function Home({ route }) {
           showsHorizontalScrollIndicator={false}
           style={styles.contractList}
           refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-            />
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
         >
           {boletos.map((boleto, index) => (
@@ -446,10 +447,7 @@ export default function Home({ route }) {
           </View>
         </View>
       </Modal>
-
-
-
-    </View>
+    </SafeAreaView>
   );
 }
 

@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import logo from "../Images/logo.png";
-
+import { SafeAreaView } from "react-native-safe-area-context";
 import * as Animatable from "react-native-animatable";
 
 export default function SelecionarContrato({ route, navigation }) {
@@ -71,7 +71,7 @@ export default function SelecionarContrato({ route, navigation }) {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Animatable.View
         animation="fadeInDown"
         duration={3000}
@@ -120,7 +120,7 @@ export default function SelecionarContrato({ route, navigation }) {
           </Animatable.View>
         ))}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 

@@ -1,25 +1,25 @@
 import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
-
+import { SafeAreaView } from "react-native-safe-area-context";
 import ImageBoleto from "../Images/ImageBoleto.png";
 import logo from "../Images/logo.png";
 
 export default function SemBoleto() {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.imageContainer1}>
         <Image source={logo} style={styles.image} />
       </View>
 
       <Image source={ImageBoleto} style={styles.imagePrincipal} />
       <Text style={styles.text}>Você não tem boleto vencido!</Text>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex:1,
+    flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
@@ -37,12 +37,12 @@ const styles = StyleSheet.create({
   image: {
     width: 300,
     height: 150,
-    marginBottom: 10
+    marginBottom: 10,
   },
   imagePrincipal: {
     width: 250,
     height: 250,
-    marginBottom: 15
+    marginBottom: 15,
   },
   text: {
     fontSize: 25,

@@ -6,6 +6,7 @@ import styled from "styled-components/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { consultaAPI } from "../Api/Api";
 import { useNavigation } from "@react-navigation/native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import * as Animatable from "react-native-animatable";
 
@@ -133,7 +134,7 @@ function isValidCPF(cpf) {
 
 function isValidCNPJ(cnpj) {
   if (typeof cnpj !== "string") return false;
-  cnpj = cnpj.replace(/[\s.-]*/g, ""); // Remove pontos, traços e espaços em branco
+  cnpj = cnpj.replace(/[\s.-]*/g, ""); 
   if (cnpj.length !== 14) return false;
 
   // Validação básica
@@ -238,15 +239,15 @@ export default function Login() {
           setError("CPF/CNPJ inválido");
         }
       } catch (apiError) {
-        setError("Erro na chamada à API");
+        setError("Erro nos nossos servidores");
       }
     } else {
-      setError("ERRO 3");
+      setError("Por Favor, tente novamente");
     }
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
 
       <Animatable.View
@@ -282,6 +283,6 @@ export default function Login() {
         </StyledButton>
         {error !== "" && <ErrorText>{error}</ErrorText>}
       </Animatable.View>
-    </View>
+    </SafeAreaView>
   );
 }
