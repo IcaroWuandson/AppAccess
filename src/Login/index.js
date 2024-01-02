@@ -1,5 +1,12 @@
 import { StatusBar } from "expo-status-bar";
-import { View, Image, Text, StyleSheet } from "react-native";
+import {
+  View,
+  Image,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Linking,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import logo from "../Images/logo.png";
 import styled from "styled-components/native";
@@ -42,6 +49,13 @@ const ErrorText = styled.Text`
   margin-top: 10px;
 `;
 
+const TermsLink = styled.Text`
+  color: white;
+  text-decoration-line: underline;
+  margin-left: 65px;
+  margin-bottom: 10px;
+`;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -82,7 +96,7 @@ const styles = StyleSheet.create({
 
 function isValidCPF(cpf) {
   if (typeof cpf !== "string") return false;
-  cpf = cpf.replace(/[\s.-]*/g, ""); // Remove pontos, traços e espaços em branco
+  cpf = cpf.replace(/[\s.-]*/g, "");
   if (cpf.length !== 11) return false;
 
   if (
@@ -134,7 +148,7 @@ function isValidCPF(cpf) {
 
 function isValidCNPJ(cnpj) {
   if (typeof cnpj !== "string") return false;
-  cnpj = cnpj.replace(/[\s.-]*/g, ""); 
+  cnpj = cnpj.replace(/[\s.-]*/g, "");
   if (cnpj.length !== 14) return false;
 
   // Validação básica
@@ -184,9 +198,7 @@ export default function Login() {
         if (storedCpfCnpj) {
           setCpfCnpj(storedCpfCnpj);
         }
-      } catch (error) {
-        console.error("Erro ao recuperar CPF/CNPJ:", error);
-      }
+      } catch (error) {}
     };
 
     loadCpfCnpj();
@@ -233,7 +245,7 @@ export default function Login() {
                 .catch((storageError) => {});
             }
           } else {
-            setError(data.message || "Erro desconhecido na API");
+            setError(data.message || "Erro nos nossos servidores");
           }
         } else {
           setError("CPF/CNPJ inválido");
@@ -244,6 +256,12 @@ export default function Login() {
     } else {
       setError("Por Favor, tente novamente");
     }
+  };
+
+  const handleTermsPress = () => {
+    Linking.openURL(
+      "https://accesssollutions.com.br/app/politica-privacidade.html"
+    );
   };
 
   return (
@@ -277,6 +295,10 @@ export default function Login() {
             setError("");
           }}
         />
+
+        <TouchableOpacity onPress={handleTermsPress}>
+          <TermsLink>Nossos Termos de Política e Privacidade</TermsLink>
+        </TouchableOpacity>
 
         <StyledButton onPress={handleLogin}>
           <ButtonText>Acessar</ButtonText>

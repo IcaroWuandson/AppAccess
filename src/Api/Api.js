@@ -63,27 +63,15 @@ export const consultaAPI = async (cpfCnpj) => {
 
 export const liberaTemporariamenteAPI = async (boleto, refreshCallback) => {
   try {
-    const segundaResposta = await apiTemporaryRelease.post("/temporaryRelease", {
-      idClient: boleto.idClient,
-      code: boleto.code,
-    });
-
-    console.log("Segunda API - Liberação Temporária:", segundaResposta.data);
-
-    console.log("Antes de executar refreshCallback");
-    if (refreshCallback && typeof refreshCallback === "function") {
-      refreshCallback();
-    }
-
-    console.log("Depois de executar refreshCallback");
-
-    return segundaResposta.data;
-  } catch (error) {
-    console.error(
-      "Erro ao liberar temporariamente a API:",
-      error.response ? error.response.data : error.message
+    const segundaResposta = await apiTemporaryRelease.post(
+      "/temporaryRelease",
+      {
+        idClient: boleto.idClient,
+        code: boleto.code,
+      }
     );
-  }
+    return segundaResposta.data;
+  } catch (error) {}
 };
 
 export default api;

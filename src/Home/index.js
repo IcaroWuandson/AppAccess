@@ -47,35 +47,24 @@ export default function Home({ route }) {
 
   const fetchData = async () => {
     try {
-      console.log("Iniciando fetchData...");
       const updatedSelectedContract = await fetchUpdatedSelectedContract();
       setSelectedContract((prevContract) => {
-        console.log("Valor atual de selectedContract:", prevContract);
-        console.log("Novo valor de selectedContract:", updatedSelectedContract);
         return updatedSelectedContract;
       });
-    } catch (error) {
-      console.error("Error fetching updated data: ", error);
-    }
+    } catch (error) {}
   };
 
   const fetchUpdatedSelectedContract = async () => {
     const data = await consultaAPI();
-    console.log("Dados da API:", data);
     return data;
   };
 
   useEffect(() => {
-    console.log(
-      "Chamando fetchData devido a uma alteração em selectedContract:",
-      selectedContract
-    );
     fetchData();
   }, [selectedContract]);
 
   useEffect(() => {
     const fetchDataOnInit = async () => {
-      console.log("Chamando fetchData durante a inicialização do componente.");
       await fetchData();
     };
 
@@ -88,7 +77,6 @@ export default function Home({ route }) {
       await fetchData();
       setRefreshing(false);
     } catch (error) {
-      console.error("Error updating data: ", error);
       setRefreshing(false);
     }
   };
@@ -96,10 +84,9 @@ export default function Home({ route }) {
   const onRefresh = async () => {
     try {
       setRefreshing(true);
-      await fetchData(); // Chama fetchData imediatamente
+      await fetchData();
       setRefreshing(false);
     } catch (error) {
-      console.error("Error during onRefresh:", error);
       setRefreshing(false);
     }
   };
@@ -125,7 +112,6 @@ export default function Home({ route }) {
         }));
 
         setBoletos(boletosData);
-        console.log("Boletos atualizados:", boletos);
       }
     };
 
@@ -171,11 +157,8 @@ export default function Home({ route }) {
         const encodedPix = encodeURIComponent(selectedBoleto.pix);
         await Clipboard.setString(encodedPix);
       } else {
-        console.error("Nenhum boleto foi selecionado");
       }
-    } catch (error) {
-      console.error("Erro ao copiar:", error);
-    }
+    } catch (error) {}
   };
 
   const handleCopyToClipboardBarCode = async () => {
@@ -184,22 +167,13 @@ export default function Home({ route }) {
       if (selectedBoleto) {
         await Clipboard.setString(selectedBoleto.barcode);
       } else {
-        console.error("Nenhum boleto foi selecionado");
       }
-    } catch (error) {
-      console.error("Erro ao copiar", error);
-    }
+    } catch (error) {}
   };
 
   const handleLiberarPress = async (boleto) => {
     try {
       if (boleto) {
-        console.log(
-          "ID e Status do boleto selecionado:",
-          boleto.code,
-          boleto.status
-        );
-
         const boletoData = {
           idClient: boleto.idClient,
           code: boleto.code,
@@ -219,10 +193,8 @@ export default function Home({ route }) {
             setModalErrorVisible(true);
           });
       } else {
-        console.error("Nenhum Boleto Selecionado para Desbloqueio");
       }
     } catch (error) {
-      console.log(error);
       setModalErrorVisible(true);
     }
   };
