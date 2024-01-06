@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context"; // Importe o SafeAreaView
-
+import "react-native-gesture-handler";
 import ImageContato from "../Images/ImageContato.png";
 import logo from "../Images/logo.png";
 import logoWhats from "../Images/whatsapp-logo.png";

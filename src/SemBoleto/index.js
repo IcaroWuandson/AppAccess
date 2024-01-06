@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ImageBoleto from "../Images/ImageBoleto.png";
 import logo from "../Images/logo.png";
-
+import "react-native-gesture-handler";
 export default function SemBoleto() {
   return (
     <SafeAreaView style={styles.container}>

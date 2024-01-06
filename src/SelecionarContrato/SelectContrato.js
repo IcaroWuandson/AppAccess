@@ -12,7 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import logo from "../Images/logo.png";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Animatable from "react-native-animatable";
-
+import "react-native-gesture-handler";
 export default function SelecionarContrato({ route, navigation }) {
   const [userData, setUserData] = useState(route.params.userData);
   const [refreshing, setRefreshing] = useState(false);

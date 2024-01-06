@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from "react-native-screens/native-stack";
 import { enableScreens } from "react-native-screens";
-
+import "react-native-gesture-handler";
 enableScreens();
 
 import Login from "./Login";

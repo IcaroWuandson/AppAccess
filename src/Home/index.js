@@ -18,7 +18,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context"; // Importe o SafeAreaView
-
+import "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 
 import * as Clipboard from "expo-clipboard";

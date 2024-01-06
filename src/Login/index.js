@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   containerForm: {
-    flex: 1,
+    flex: 2,
     backgroundColor: "#0077bd",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     color: "white",
     marginBottom: 40,
     textAlign: "center",
-    marginTop: 80,
+    marginTop: 15,
   },
   infoText: {
     fontSize: 16,
