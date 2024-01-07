@@ -51,10 +51,10 @@ export const consultaAPI = async (cpfCnpj) => {
           records: records,
         };
       } else {
-        throw new Error("Nenhum contrato encontrado na resposta da API.");
+        throw new Error("Nenhum contrato encontrado");
       }
     } else {
-      throw new Error("Falha na autenticação ou dados da API inválidos");
+      throw new Error("Falha na autenticação ou dados inválidos");
     }
   } catch (error) {
     throw error;

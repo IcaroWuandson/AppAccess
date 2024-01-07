@@ -63,6 +63,7 @@ const styles = StyleSheet.create({
   containerLogo: {
     flex: 1,
     justifyContent: "center",
+    backgroundColor: "#fff",
     alignItems: "center",
   },
   containerForm: {
