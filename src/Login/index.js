@@ -216,16 +216,21 @@ export default function Login() {
             if (data.records > 1) {
               navigation.navigate("SelecionarContrato", { userData: data });
             } else {
-              AsyncStorage.setItem("cpfCnpj", cleanedCpfCnpj)
-                .then(() => {
-                  navigation.navigate("SelecionarContrato", {
-                    cpfCnpj: cleanedCpfCnpj,
+              if (data.contracts && data.contracts.length === 0) {
+                AsyncStorage.setItem("cpfCnpj", cleanedCpfCnpj)
+                  .then(() => {
+                    navigation.navigate("SelecionarContrato", {
+                      cpfCnpj: cleanedCpfCnpj,
+                    });
+                  })
+                  .catch((storageError) => {
                   });
-                })
-                .catch((storageError) => {});
+              } else {
+                navigation.navigate("SemBoleto");
+              }
             }
           } else {
-            setError(data.message || "Erro desconhecido na API");
+            setError(data.message || "Erro nos nossos servidores");
           }
         } else if (
           cleanedCpfCnpj.length === 14 &&
@@ -237,13 +242,18 @@ export default function Login() {
             if (data.records > 1) {
               navigation.navigate("SelecionarContrato", { userData: data });
             } else {
-              AsyncStorage.setItem("cpfCnpj", cleanedCpfCnpj)
-                .then(() => {
-                  navigation.navigate("SelecionarContrato", {
-                    cpfCnpj: cleanedCpfCnpj,
+              if (data.contracts && data.contracts.length === 0) {
+                AsyncStorage.setItem("cpfCnpj", cleanedCpfCnpj)
+                  .then(() => {
+                    navigation.navigate("SelecionarContrato", {
+                      cpfCnpj: cleanedCpfCnpj,
+                    });
+                  })
+                  .catch((storageError) => {
                   });
-                })
-                .catch((storageError) => {});
+              } else {
+                navigation.navigate("SemBoleto");
+              }
             }
           } else {
             setError(data.message || "Erro nos nossos servidores");
@@ -252,6 +262,7 @@ export default function Login() {
           setError("CPF/CNPJ inválido");
         }
       } catch (apiError) {
+        navigation.navigate("SemBoleto");
         setError("Erro nos nossos servidores");
       }
     } else {

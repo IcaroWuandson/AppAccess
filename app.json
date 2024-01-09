@@ -2,7 +2,7 @@
   "expo": {
     "name": "Access",
     "slug": "Access",
-    "version": "2.1.1",
+    "version": "2.1.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -15,10 +15,10 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.icarowuandson.Access",
-      "buildNumber": "3"
+      "buildNumber": "4"
     },
     "android": {
-      "versionCode": 10,
+      "versionCode": 11,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
