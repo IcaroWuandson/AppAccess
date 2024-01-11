@@ -213,7 +213,7 @@ export default function Login() {
           const data = await consultaAPI(cleanedCpfCnpj);
 
           if (data && data.cpfCnpj) {
-            if (data.records > 1) {
+            if (data.records) {
               navigation.navigate("SelecionarContrato", { userData: data });
             } else {
               if (data.contracts && data.contracts.length === 0) {
@@ -239,7 +239,7 @@ export default function Login() {
           const data = await consultaAPI(cleanedCpfCnpj);
 
           if (data && data.cpfCnpj) {
-            if (data.records > 1) {
+            if (data.records) {
               navigation.navigate("SelecionarContrato", { userData: data });
             } else {
               if (data.contracts && data.contracts.length === 0) {
