@@ -21,7 +21,7 @@ const StyledInput = styled.TextInput`
   width: 100%;
   height: 40px;
   border-bottom-width: 2px;
-  border-bottom-color: #fff;
+  border-bottom-color: #111;
   margin-bottom: 15px;
   font-size: 25px;
   padding: 5px;
@@ -50,7 +50,7 @@ const ErrorText = styled.Text`
 `;
 
 const TermsLink = styled.Text`
-  color: white;
+  color: black;
   text-decoration-line: underline;
   margin-left: 65px;
   margin-bottom: 10px;
@@ -59,6 +59,7 @@ const TermsLink = styled.Text`
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#fff",
   },
   containerLogo: {
     flex: 1,
@@ -68,7 +69,7 @@ const styles = StyleSheet.create({
   },
   containerForm: {
     flex: 2,
-    backgroundColor: "#0077bd",
+    backgroundColor: "#fff",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     paddingStart: "5%",
@@ -81,14 +82,14 @@ const styles = StyleSheet.create({
   welcomeText: {
     fontSize: 28,
     fontWeight: "bold",
-    color: "white",
+    color: "black",
     marginBottom: 40,
     textAlign: "center",
     marginTop: 15,
   },
   infoText: {
     fontSize: 16,
-    color: "white",
+    color: "black",
     marginBottom: 20,
     textAlign: "center",
     marginTop: 10,
@@ -223,8 +224,7 @@ export default function Login() {
                       cpfCnpj: cleanedCpfCnpj,
                     });
                   })
-                  .catch((storageError) => {
-                  });
+                  .catch((storageError) => {});
               } else {
                 navigation.navigate("SemBoleto");
               }
@@ -249,8 +249,7 @@ export default function Login() {
                       cpfCnpj: cleanedCpfCnpj,
                     });
                   })
-                  .catch((storageError) => {
-                  });
+                  .catch((storageError) => {});
               } else {
                 navigation.navigate("SemBoleto");
               }

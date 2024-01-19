@@ -12,7 +12,6 @@ import {
   RefreshControl,
 } from "react-native";
 import logo from "../Images/logo.png";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { liberaTemporariamenteAPI } from "../Api/Api";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
@@ -436,7 +435,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    backgroundColor: "#0077bd",
+    backgroundColor: "#fff",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     paddingStart: "5%",
@@ -470,7 +469,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   statusText3: {
-    color: "#FFF",
+    color: "#111",
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
@@ -486,13 +485,13 @@ const styles = StyleSheet.create({
     width: "98%",
     padding: 20,
     borderRadius: 20,
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFEC",
     shadowColor: "#000",
     shadowOffset: {
-      width: 0,
+      width: 2,
       height: 2,
     },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.35,
     shadowRadius: 4,
     elevation: 5,
     marginBottom: 20,
