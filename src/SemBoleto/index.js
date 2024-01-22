@@ -1,14 +1,27 @@
 import React from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ImageBoleto from "../Images/ImageBoleto.png";
-import logo from "../Images/logo.png";
+import chat from "../Images/chat.png";
+import chamado from "../Images/chamado.png";
+
 import "react-native-gesture-handler";
-export default function SemBoleto() {
+export default function SemBoleto({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.imageContainer1}>
-        <Image source={logo} style={styles.image} />
+        <View style={styles.contetButtons}>
+          <TouchableOpacity
+            style={styles.buttonsOptions}
+            onPress={() => navigation.navigate("Chat")}
+          >
+            <Image source={chat} style={styles.imageButtom} />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.buttonsOptions}>
+            <Image source={chamado} style={styles.imageButtom} />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <Image source={ImageBoleto} style={styles.imagePrincipal} />
@@ -26,7 +39,21 @@ const styles = StyleSheet.create({
   },
   imageContainer1: {
     alignItems: "center",
+    padding: 20,
+    margin: 30,
+  },
+  contetButtons: {
+    flexDirection: "row",
+    borderRadius: 20,
+    padding: 10,
+    gap: 30,
+  },
+  buttonsOptions: {
     justifyContent: "center",
+    alignContent: "center",
+    backgroundColor: "#DCF2F1",
+    borderRadius: 20,
+    padding: 10,
   },
   imageContainer2: {
     flex: 2,

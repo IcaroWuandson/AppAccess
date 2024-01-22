@@ -15,6 +15,7 @@ import chamado from "../Images/chamado.png";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Animatable from "react-native-animatable";
 import "react-native-gesture-handler";
+
 export default function SelecionarContrato({ route, navigation }) {
   const [userData, setUserData] = useState(route.params.userData);
   const [refreshing, setRefreshing] = useState(false);
@@ -76,11 +77,14 @@ export default function SelecionarContrato({ route, navigation }) {
     <SafeAreaView style={styles.container}>
       <Animatable.View
         animation="fadeInDown"
-        duration={3000}
+        duration={1000}
         style={styles.imageContainer}
       >
         <View style={styles.contetButtons}>
-          <TouchableOpacity style={styles.buttonsOptions}>
+          <TouchableOpacity
+            style={styles.buttonsOptions}
+            onPress={() => navigation.navigate("Chat")}
+          >
             <Image source={chat} style={styles.image} />
           </TouchableOpacity>
 
@@ -105,7 +109,7 @@ export default function SelecionarContrato({ route, navigation }) {
         {userData.contracts.map((contract, index) => (
           <Animatable.View
             animation="fadeInUp"
-            duration={3000}
+            duration={1000}
             key={index}
             style={styles.contractItem}
           >

@@ -3,14 +3,27 @@ import { View, Text, StyleSheet, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context"; // Importe o SafeAreaView
 import "react-native-gesture-handler";
 import ImageContato from "../Images/ImageContato.png";
-import logo from "../Images/logo.png";
+import chat from "../Images/chat.png";
+import chamado from "../Images/chamado.png";
+
 import logoWhats from "../Images/whatsapp-logo.png";
 
-export default function SemBoleto() {
+export default function SemBoleto({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.imageContainer1}>
-        <Image source={logo} style={styles.image} />
+        <View style={styles.contetButtons}>
+          <TouchableOpacity
+            style={styles.buttonsOptions}
+            onPress={() => navigation.navigate("Chat")}
+          >
+            <Image source={chat} style={styles.imageButtom} />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.buttonsOptions}>
+            <Image source={chamado} style={styles.imageButtom} />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <Image source={ImageContato} style={styles.imagePrincipal} />
@@ -36,7 +49,20 @@ const styles = StyleSheet.create({
   },
   imageContainer1: {
     alignItems: "center",
+    padding: 20,
+  },
+  contetButtons: {
+    flexDirection: "row",
+    borderRadius: 20,
+    padding: 10,
+    gap: 30,
+  },
+  buttonsOptions: {
     justifyContent: "center",
+    alignContent: "center",
+    backgroundColor: "#DCF2F1",
+    borderRadius: 20,
+    padding: 10,
   },
   imageContainer2: {
     flex: 2,
