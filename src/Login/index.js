@@ -213,6 +213,18 @@ export default function Login() {
         if (cleanedCpfCnpj.length === 11 && isValidCPF(cleanedCpfCnpj)) {
           const data = await consultaAPI(cleanedCpfCnpj);
 
+          if (
+            data &&
+            data.cpfCnpj &&
+            data.contracts &&
+            data.contracts.length > 0
+          ) {
+            const firstContract = data.contracts[0];
+            if (firstContract.status === "DESATIVADO") {
+              navigation.navigate("Desativado");
+              return;
+            }
+          }
           if (data && data.cpfCnpj) {
             if (data.records) {
               navigation.navigate("SelecionarContrato", { userData: data });
@@ -237,7 +249,6 @@ export default function Login() {
           isValidCNPJ(cleanedCpfCnpj)
         ) {
           const data = await consultaAPI(cleanedCpfCnpj);
-
           if (data && data.cpfCnpj) {
             if (data.records) {
               navigation.navigate("SelecionarContrato", { userData: data });
@@ -278,7 +289,6 @@ export default function Login() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
-
       <Animatable.View
         animation="fadeInDown"
         duration={2000}

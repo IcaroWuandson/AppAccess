@@ -9,6 +9,7 @@ import SelecionarContrato from "./SelecionarContrato/SelectContrato";
 import SemBoleto from "./SemBoleto";
 import Contato from "./Contato";
 import Chat from "./Chat";
+import Desativado from "./Desativado";
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +27,7 @@ function AppNavigator() {
       <Stack.Screen name="SemBoleto" component={SemBoleto} />
       <Stack.Screen name="Contato" component={Contato} />
       <Stack.Screen name="Chat" component={Chat} />
+      <Stack.Screen name="Desativado" component={Desativado} />
     </Stack.Navigator>
   );
 }
