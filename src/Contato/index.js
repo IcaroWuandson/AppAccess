@@ -1,6 +1,6 @@
 import React from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context"; // Importe o SafeAreaView
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context"; 
 import "react-native-gesture-handler";
 import ImageContato from "../Images/ImageContato.png";
 import chat from "../Images/chat.png";
@@ -18,10 +18,7 @@ export default function SemBoleto({ navigation }) {
             onPress={() => navigation.navigate("Chat")}
           >
             <Image source={chat} style={styles.imageButtom} />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.buttonsOptions}>
-            <Image source={chamado} style={styles.imageButtom} />
+            <Text style={{ margin: 10 }}>Fale Conosco</Text>
           </TouchableOpacity>
         </View>
       </View>

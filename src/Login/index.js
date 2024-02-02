@@ -153,7 +153,7 @@ function isValidCNPJ(cnpj) {
   cnpj = cnpj.replace(/[\s.-]*/g, "");
   if (cnpj.length !== 14) return false;
 
-  // Validação básica
+ 
   if (/^(\d)\1{13}$/.test(cnpj)) return false;
 
   let length = cnpj.length - 2;

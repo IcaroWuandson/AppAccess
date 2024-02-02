@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context"; // Importe o SafeAreaView
+import { SafeAreaView } from "react-native-safe-area-context";
 import "react-native-gesture-handler";
 import ImageDesativado from "../Images/ImageDesativado.png";
 

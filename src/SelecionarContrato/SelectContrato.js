@@ -52,7 +52,7 @@ export default function SelecionarContrato({ route, navigation }) {
           (item) => "payment" in item && item.payment !== null
         );
         const overdueBoletos = contract.booklet.filter(
-          (boleto) => boleto.payment === "VENCIDO"
+          (boleto) => boleto.payment === "VENCIDO" || "BLOQUEADO"
         );
         if (overdueBoletos.length > 2) {
           navigation.navigate("Contato");
@@ -86,10 +86,7 @@ export default function SelecionarContrato({ route, navigation }) {
             onPress={() => navigation.navigate("Chat")}
           >
             <Image source={chat} style={styles.image} />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.buttonsOptions}>
-            <Image source={chamado} style={styles.image} />
+            <Text style={{ margin: 10 }}>Fale Conosco</Text>
           </TouchableOpacity>
         </View>
       </Animatable.View>

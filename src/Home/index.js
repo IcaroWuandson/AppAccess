@@ -7,16 +7,13 @@ import {
   StyleSheet,
   ScrollView,
   Linking,
-  Button,
   Modal,
   RefreshControl,
 } from "react-native";
 import logo from "../Images/logo.png";
 import { liberaTemporariamenteAPI } from "../Api/Api";
-import { FontAwesome } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
-import { SafeAreaView } from "react-native-safe-area-context"; // Importe o SafeAreaView
+import { FontAwesome, Ionicons, AntDesign, Feather } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
 import "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 
@@ -182,7 +179,6 @@ export default function Home({ route }) {
           .then((response) => {
             if (response.status === "success") {
               setModalSuccessVisible(true);
-              // Aqui eu to chamando o handleRefresh após o sucesso de handleLiberarPress
               handleRefresh();
             } else {
               setModalErrorVisible(true);
@@ -198,8 +194,25 @@ export default function Home({ route }) {
     }
   };
 
+  const handlePress = () => {
+    navigation.goBack();
+  };
+
   return (
     <SafeAreaView style={styles.tabContainer}>
+      <TouchableOpacity
+        onPress={handlePress}
+        style={{
+          margin: 10,
+          fontSize: 40,
+          flexDirection: "row",
+          justifyContent: "flex-start",
+          alignItems: "center",
+        }}
+      >
+        <Ionicons name="chevron-back" size={18} color="black" />
+        <Text> Voltar</Text>
+      </TouchableOpacity>
       <Animatable.View
         animation="fadeInDown"
         duration={2000}
@@ -290,9 +303,11 @@ export default function Home({ route }) {
 
                 <View
                   style={
-                    !boleto.temporary_released &&
-                    (selectedContract.status == "REDUZIDO" ||
-                      selectedContract.status == "BLOQUEADO")
+                    (!boleto.temporary_released &&
+                      selectedContract.booklet.length > 0 &&
+                      (selectedContract.booklet[0].payment === "VENCIDO" ||
+                        selectedContract.booklet[0].payment === "BLOQUEADO")) ||
+                    selectedContract.booklet[0].payment !== "ABERTO"
                       ? styles.liberarContainer
                       : styles.hiddenContainer
                   }
