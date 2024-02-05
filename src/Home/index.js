@@ -307,7 +307,7 @@ export default function Home({ route }) {
                       selectedContract.status === "BLOQUEADO") &&
                     selectedContract.booklet.some(
                       (boleto) =>
-                        boleto.status === "VENCIDO" &&
+                        boleto.payment === "VENCIDO" &&
                         boleto.payment !== "ABERTO"
                     )
                       ? styles.liberarContainer
