@@ -303,11 +303,13 @@ export default function Home({ route }) {
 
                 <View
                   style={
-                    (!boleto.temporary_released &&
-                      selectedContract.booklet.length > 0 &&
-                      (selectedContract.booklet[0].payment === "VENCIDO" ||
-                        selectedContract.booklet[0].payment === "BLOQUEADO")) ||
-                    selectedContract.booklet[0].payment !== "ABERTO"
+                    (selectedContract.status === "REDUZIDO" ||
+                      selectedContract.status === "BLOQUEADO") &&
+                    selectedContract.booklet.some(
+                      (boleto) =>
+                        boleto.status === "VENCIDO" &&
+                        boleto.payment !== "ABERTO"
+                    )
                       ? styles.liberarContainer
                       : styles.hiddenContainer
                   }
