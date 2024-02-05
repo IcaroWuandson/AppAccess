@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import chat from "../Images/chat.png";
-import chamado from "../Images/chamado.png";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Animatable from "react-native-animatable";
@@ -54,7 +53,7 @@ export default function SelecionarContrato({ route, navigation }) {
         const overdueBoletos = contract.booklet.filter(
           (boleto) => boleto.payment === "VENCIDO" || "BLOQUEADO"
         );
-        if (overdueBoletos.length > 2) {
+        if (overdueBoletos.length > 3) {
           navigation.navigate("Contato");
         } else if (hasValidPayment) {
           await AsyncStorage.setItem("contractId", contract.id.toString());
