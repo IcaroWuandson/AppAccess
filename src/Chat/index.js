@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import { WebView } from "react-native-webview";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
