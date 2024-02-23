@@ -300,24 +300,6 @@ export default function Home({ route }) {
                   />
                   <Text style={styles.buttonText}>Pagar boleto via Pix</Text>
                 </TouchableOpacity>
-
-                <View
-                  style={
-                    selectedContract.booklet[0].temporary_released === "false"
-                      ? styles.liberarContainer
-                      : styles.hiddenContainer
-                  }
-                >
-                  <TouchableOpacity
-                    style={styles.liberarButtom}
-                    onPress={() => handleLiberarPress(boleto)}
-                  >
-                    <Feather name="unlock" size={24} color="white" />
-                    <Text style={styles.buttonText}>
-                      Desbloqueio Temporário
-                    </Text>
-                  </TouchableOpacity>
-                </View>
               </Animatable.View>
             </Animatable.View>
           ))}
