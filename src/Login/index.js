@@ -66,6 +66,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#fff",
     alignItems: "center",
+    marginTop: 4,
+    resizeMode: "contain",
   },
   containerForm: {
     flex: 2,
@@ -78,6 +80,7 @@ const styles = StyleSheet.create({
   image: {
     width: 400,
     height: 400,
+    resizeMode: "contain",
   },
   welcomeText: {
     fontSize: 28,
@@ -153,7 +156,6 @@ function isValidCNPJ(cnpj) {
   cnpj = cnpj.replace(/[\s.-]*/g, "");
   if (cnpj.length !== 14) return false;
 
- 
   if (/^(\d)\1{13}$/.test(cnpj)) return false;
 
   let length = cnpj.length - 2;
